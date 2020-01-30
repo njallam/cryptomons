@@ -1,5 +1,4 @@
 build
-app/src/contracts
 
 # WebStorm
 .idea/**/workspace.xml

@@ -1,22 +1,23 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Drizzle } from '@drizzle/store';
-import { DrizzleContext } from '@drizzle/react-plugin';
+import { drizzleReactHooks } from '@drizzle/react-plugin';
 
 import './App.css';
-
 import drizzleOptions from './drizzleOptions';
-import MyComponent from './MyComponent';
+import MyComponent from './components/MyComponent';
+import LoadingContainer from './components/LoadingContainer';
 
 const drizzle = new Drizzle(drizzleOptions);
+const { DrizzleProvider } = drizzleReactHooks;
 
-class App extends Component {
-  render() {
-    return (
-      <DrizzleContext.Provider drizzle={drizzle}>
+function App() {
+  return (
+    <DrizzleProvider drizzle={drizzle}>
+      <LoadingContainer>
         <MyComponent />
-      </DrizzleContext.Provider>
-    );
-  }
+      </LoadingContainer>
+    </DrizzleProvider>
+  );
 }
 
 export default App;
