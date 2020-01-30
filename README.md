@@ -4,7 +4,7 @@
 
 1. `nodejs`
 2. `npm install -g yarn truffle`
-3. Either `npm install -g ganach-cli` or [Ganache](https://www.trufflesuite.com/ganache)
+3. Either `npm install -g ganache-cli` or [Ganache](https://www.trufflesuite.com/ganache)
 
 ## Building & running
 
