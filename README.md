@@ -10,10 +10,14 @@
 
 ### Smart Contract
 
-1. (In this directory) `truffle build`
-2. (In this directory) `truffle migrate`
+Run the following in this directory:
+
+1. `truffle build`
+2. `truffle migrate`
 
 ### Web Interface
 
-1. (In `app/`) `yarn`
-2. (In `app/`) `yarn start`
+Run the following in `app/`:
+
+1. `yarn`
+2. `yarn start`
