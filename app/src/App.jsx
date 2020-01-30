@@ -4,7 +4,7 @@ import { drizzleReactHooks } from '@drizzle/react-plugin';
 
 import './App.css';
 import drizzleOptions from './drizzleOptions';
-import MyComponent from './components/MyComponent';
+import Home from './components/Home';
 import LoadingContainer from './components/LoadingContainer';
 
 const drizzle = new Drizzle(drizzleOptions);
@@ -14,7 +14,7 @@ function App() {
   return (
     <DrizzleProvider drizzle={drizzle}>
       <LoadingContainer>
-        <MyComponent />
+        <Home />
       </LoadingContainer>
     </DrizzleProvider>
   );

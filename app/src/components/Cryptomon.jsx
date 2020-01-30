@@ -1,13 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
-import { List, ListItem, CardContent, CardMedia } from '@material-ui/core';
+import {
+  Button,
+  CardActions,
+  CardContent,
+  CardMedia,
+  List,
+  ListItem
+} from '@material-ui/core';
 import Card from '@material-ui/core/Card';
 
 const useStyles = makeStyles({
-  card: {
-    maxWidth: 345
-  },
   media: {
     height: 140
   }
@@ -16,7 +20,7 @@ const useStyles = makeStyles({
 function Cryptomon({ species, owner, price }) {
   const classes = useStyles();
   return (
-    <Card className={classes.card}>
+    <Card variant="outlined">
       <CardMedia
         className={classes.media}
         image={`${process.env.PUBLIC_URL}/images/${species}.png`}
@@ -27,6 +31,17 @@ function Cryptomon({ species, owner, price }) {
           <ListItem key={1}>{price} wei</ListItem>
         </List>
       </CardContent>
+      <CardActions>
+        <Button size="small" color="primary" variant="contained">
+          Buy
+        </Button>
+        <Button size="small" color="secondary" variant="contained">
+          Breed
+        </Button>
+        <Button size="small" color="secondary" variant="contained">
+          Fight
+        </Button>
+      </CardActions>
     </Card>
   );
 }
