@@ -5,8 +5,7 @@ import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import { List, ListItem, CardContent } from '@material-ui/core';
-import Card from '@material-ui/core/Card';
+import Cryptomon from './Cryptomon';
 
 const { useDrizzle, useDrizzleState } = drizzleReactHooks;
 const { AccountData, ContractData, ContractForm } = newContextComponents;
@@ -41,6 +40,7 @@ export default () => {
           contract="Cryptomons"
           method="cryptomons"
           methodArgs={[i]}
+          render={data => <Cryptomon {...data} />}
         />
       ))}
 
