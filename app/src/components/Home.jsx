@@ -5,15 +5,16 @@ import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import Cryptomon from './Cryptomon';
+import Web3Utils from 'web3-utils';
 import {
-  GridList,
-  GridListTile,
+  Grid,
   ExpansionPanel,
   ExpansionPanelDetails,
   ExpansionPanelSummary
 } from '@material-ui/core';
 import MaterialForm from './MaterialForm';
+
+import Cryptomon from './Cryptomon';
 
 const { useDrizzle, useDrizzleState } = drizzleReactHooks;
 const { AccountData, ContractData, ContractForm } = newContextComponents;
@@ -35,7 +36,7 @@ export default () => {
       </AppBar>
       <Toolbar />
       <Container>
-        <ExpansionPanel defaultExpanded={true}>
+        <ExpansionPanel defaultExpanded>
           <ExpansionPanelSummary>
             <Typography variant="h5">Account Info</Typography>
           </ExpansionPanelSummary>
@@ -50,25 +51,32 @@ export default () => {
           </ExpansionPanelDetails>
         </ExpansionPanel>
 
-        <ExpansionPanel defaultExpanded={true}>
+        <ExpansionPanel defaultExpanded>
           <ExpansionPanelSummary>
             <Typography variant="h5">Cryptomons</Typography>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
-            <GridList cellHeight={'auto'} cols={5}>
+            <Grid container spacing={2}>
               {range(total).map(i => (
-                <GridListTile key={i}>
+                <Grid item key={i}>
                   <ContractData
                     drizzle={drizzle}
                     drizzleState={drizzleState}
                     contract="Cryptomons"
                     method="cryptomons"
                     methodArgs={[i]}
-                    render={data => <Cryptomon {...data} />}
+                    render={data => (
+                      <Cryptomon
+                        id={i}
+                        species={Number(data.species)}
+                        owner={data.owner}
+                        price={data.price}
+                      />
+                    )}
                   />
-                </GridListTile>
+                </Grid>
               ))}
-            </GridList>
+            </Grid>
           </ExpansionPanelDetails>
         </ExpansionPanel>
 
@@ -84,6 +92,9 @@ export default () => {
               method="create"
               render={MaterialForm}
             />
+            <Typography display="block" variant="caption">
+              1 ETH = {Web3Utils.toWei('1', 'ether')}
+            </Typography>
           </ExpansionPanelDetails>
         </ExpansionPanel>
       </Container>

@@ -1,7 +1,7 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { drizzleReactHooks } from "@drizzle/react-plugin";
-import LinearProgress from "@material-ui/core/LinearProgress";
+import React from 'react';
+import PropTypes from 'prop-types';
+import { drizzleReactHooks } from '@drizzle/react-plugin';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 const { useDrizzleState } = drizzleReactHooks;
 
