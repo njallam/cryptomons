@@ -33,11 +33,10 @@ contract Cryptomons {
         Cryptomon storage cryptomon = cryptomons[id];
         require(cryptomon.owner != msg.sender, "Cryptomon already owned.");
         require(cryptomon.price > 0, "Cryptomon not for sale.");
-        require(msg.value > cryptomon.price, "Message value too low.");
-        address payable seller = cryptomon.owner;
+        require(msg.value >= cryptomon.price, "Message value too low.");
         cryptomon.owner = msg.sender;
         cryptomon.price = 0;
-        seller.transfer(msg.value);
+        cryptomon.owner.transfer(cryptomon.price);
     }
 
     function sell(uint256 id, uint256 price) public {
