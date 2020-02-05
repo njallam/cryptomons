@@ -13,7 +13,6 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  Input,
   List,
   ListItem,
   TextField
@@ -25,7 +24,7 @@ const useStyles = makeStyles({
     minWidth: 300
   },
   media: {
-    height: 140
+    height: 250
   }
 });
 
@@ -43,10 +42,10 @@ function Cryptomon({ id, species, owner, price }) {
   const { send: buy } = useCacheSend('Cryptomons', 'buy');
   const { send: sell } = useCacheSend('Cryptomons', 'sell');
   const [sellOpen, setSellOpen] = useState(false);
-  const [sellPrice, setSellPrice] = useState(price);
+  const [sellPrice, setSellPrice] = useState(Web3Utils.fromWei(price, 'ether'));
 
   const handleSell = () => {
-    sell(id, sellPrice);
+    sell(id, Web3Utils.toWei(sellPrice, 'ether'));
     setSellOpen(false);
   };
 
@@ -60,13 +59,21 @@ function Cryptomon({ id, species, owner, price }) {
         <CardContent>
           <List>
             <ListItem key={0}>
-              <Input
-                defaultValue={owner}
+              <TextField
+                label="Owner"
+                value={owner}
+                variant="outlined"
                 disabled
-                inputProps={{ 'aria-label': 'owner' }}
               />
             </ListItem>
-            <ListItem key={1}>{Web3Utils.fromWei(price, 'ether')} ETH</ListItem>
+            <ListItem key={1}>
+              <TextField
+                label="Price"
+                value={`${Web3Utils.fromWei(price, 'ether')} ETH`}
+                variant="outlined"
+                disabled
+              />
+            </ListItem>
           </List>
         </CardContent>
         <CardActions>
@@ -116,7 +123,7 @@ function Cryptomon({ id, species, owner, price }) {
       >
         <DialogTitle id="form-dialog-title">Sell Cryptomon</DialogTitle>
         <DialogContent>
-          <DialogContentText>Enter sell price below in wei</DialogContentText>
+          <DialogContentText>Enter sell price below in ETH</DialogContentText>
           <TextField
             value={sellPrice}
             onChange={e => setSellPrice(e.target.value)}
