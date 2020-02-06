@@ -2,7 +2,6 @@ import React from 'react';
 import { Drizzle } from '@drizzle/store';
 import { drizzleReactHooks } from '@drizzle/react-plugin';
 
-import './App.css';
 import drizzleOptions from './drizzleOptions';
 import Home from './components/Home';
 import LoadingContainer from './components/LoadingContainer';

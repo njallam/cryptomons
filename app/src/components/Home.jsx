@@ -5,7 +5,6 @@ import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import Web3Utils from 'web3-utils';
 import {
   Grid,
   ExpansionPanel,
@@ -24,8 +23,9 @@ const range = n => Array.from({ length: n }, (_, i) => i);
 export default () => {
   const { drizzle, useCacheCall } = useDrizzle();
   const drizzleState = useDrizzleState(state => state);
-
   const total = useCacheCall('Cryptomons', 'total');
+
+  const web3Utils = drizzle.web3.utils;
 
   return (
     <>
@@ -35,7 +35,7 @@ export default () => {
         </Toolbar>
       </AppBar>
       <Toolbar />
-      <Container>
+      <Container maxWidth={false}>
         <ExpansionPanel defaultExpanded>
           <ExpansionPanelSummary>
             <Typography variant="h5">Account Info</Typography>
@@ -56,7 +56,7 @@ export default () => {
             <Typography variant="h5">Cryptomons</Typography>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
-            <Grid container spacing={2}>
+            <Grid container spacing={2} justify="space-evenly">
               {range(total).map(i => (
                 <Grid item key={i}>
                   <ContractData
@@ -71,6 +71,7 @@ export default () => {
                         species={Number(data.species)}
                         owner={data.owner}
                         price={data.price}
+                        health={Number(data.health)}
                       />
                     )}
                   />
@@ -93,7 +94,7 @@ export default () => {
               render={MaterialForm}
             />
             <Typography display="block" variant="caption">
-              1 ETH = {Web3Utils.toWei('1', 'ether')}
+              1 ETH = {web3Utils.toWei('1', 'ether')}
             </Typography>
           </ExpansionPanelDetails>
         </ExpansionPanel>

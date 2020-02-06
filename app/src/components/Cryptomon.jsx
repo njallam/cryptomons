@@ -1,7 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { drizzleReactHooks } from '@drizzle/react-plugin';
 import PropTypes from 'prop-types';
-import Web3Utils from 'web3-utils';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Button,
@@ -18,6 +17,7 @@ import {
   TextField
 } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
+import HealthBar from './HealthBar';
 
 const useStyles = makeStyles({
   card: {
@@ -28,30 +28,38 @@ const useStyles = makeStyles({
   }
 });
 
-function Cryptomon({ id, species, owner, price }) {
+function Cryptomon({ id, species, owner, price, health }) {
   const classes = useStyles();
 
-  const { useCacheSend } = drizzleReactHooks.useDrizzle();
+  const {
+    drizzle,
+    useCacheCall,
+    useCacheSend
+  } = drizzleReactHooks.useDrizzle();
   const drizzleState = drizzleReactHooks.useDrizzleState(s => ({
     accounts: s.accounts
   }));
+  const web3Utils = drizzle.web3.utils;
 
   const isOwner = owner === drizzleState.accounts[0];
   const isForSale = price !== '0';
 
+  const { maxHealth, attack, defence } =
+    useCacheCall('Cryptomons', 'speciess', species) || {};
   const { send: buy } = useCacheSend('Cryptomons', 'buy');
   const { send: sell } = useCacheSend('Cryptomons', 'sell');
   const [sellOpen, setSellOpen] = useState(false);
-  const [sellPrice, setSellPrice] = useState(Web3Utils.fromWei(price, 'ether'));
+  const [sellPrice, setSellPrice] = useState(web3Utils.fromWei(price, 'ether'));
 
   const handleSell = () => {
-    sell(id, Web3Utils.toWei(sellPrice, 'ether'));
+    sell(id, web3Utils.toWei(sellPrice, 'ether'));
     setSellOpen(false);
   };
 
   return (
     <>
       <Card className={classes.card} variant="outlined">
+        <HealthBar health={health} maxHealth={Number(maxHealth)} />
         <CardMedia
           className={classes.media}
           image={`${process.env.PUBLIC_URL}/images/${species}.png`}
@@ -69,7 +77,7 @@ function Cryptomon({ id, species, owner, price }) {
             <ListItem key={1}>
               <TextField
                 label="Price"
-                value={`${Web3Utils.fromWei(price, 'ether')} ETH`}
+                value={`${web3Utils.fromWei(price, 'ether')} ETH`}
                 variant="outlined"
                 disabled
               />
@@ -85,9 +93,9 @@ function Cryptomon({ id, species, owner, price }) {
             onClick={useCallback(
               () =>
                 buy(id, {
-                  value: Web3Utils.fromWei(price, 'wei')
+                  value: web3Utils.fromWei(price, 'wei')
                 }),
-              [buy, id, price]
+              [buy, id, web3Utils, price]
             )}
           >
             Buy
@@ -143,7 +151,8 @@ Cryptomon.propTypes = {
   id: PropTypes.number.isRequired,
   species: PropTypes.number.isRequired,
   owner: PropTypes.string.isRequired,
-  price: PropTypes.string.isRequired
+  price: PropTypes.string.isRequired,
+  health: PropTypes.number.isRequired
 };
 
 export default Cryptomon;
