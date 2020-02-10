@@ -48,12 +48,42 @@ function Cryptomon({ id, species, owner, price, health }) {
     useCacheCall('Cryptomons', 'speciess', species) || {};
   const { send: buy } = useCacheSend('Cryptomons', 'buy');
   const { send: sell } = useCacheSend('Cryptomons', 'sell');
+  const { send: breed } = useCacheSend('Cryptomons', 'breed');
+  const { send: fight } = useCacheSend('Cryptomons', 'fight');
   const [sellOpen, setSellOpen] = useState(false);
   const [sellPrice, setSellPrice] = useState(web3Utils.fromWei(price, 'ether'));
+  const [listOpen, setListOpen] = useState(false);
+  const [action, setAction] = useState();
+  const [selectedMon, setSelectedMon] = useState();
 
   const handleSell = () => {
     sell(id, web3Utils.toWei(sellPrice, 'ether'));
     setSellOpen(false);
+  };
+
+  const startBreed = () => {
+    setAction('breed');
+    setListOpen(true);
+  };
+
+  const startFight = () => {
+    new Audio(`${process.env.PUBLIC_URL}/cries/${species}.ogg`).play();
+    setAction('fight');
+    setListOpen(true);
+  };
+
+  const handleListSubmit = () => {
+    setListOpen(false);
+    switch (action) {
+      case 'breed':
+        breed(id, selectedMon, { value: web3Utils.toWei('50', 'ether') });
+        break;
+      case 'fight':
+        fight(id, selectedMon);
+        break;
+      default:
+        throw new Error('Unknown action.');
+    }
   };
 
   return (
@@ -109,16 +139,19 @@ function Cryptomon({ id, species, owner, price, health }) {
           >
             Sell
           </Button>
-          <Button size="small" color="secondary" variant="contained">
+          <Button
+            size="small"
+            color="secondary"
+            variant="contained"
+            onClick={startBreed}
+          >
             Breed
           </Button>
           <Button
             size="small"
             color="secondary"
             variant="contained"
-            onClick={() =>
-              new Audio(`${process.env.PUBLIC_URL}/cries/${species}.ogg`).play()
-            }
+            onClick={startFight}
           >
             Fight
           </Button>
@@ -140,6 +173,27 @@ function Cryptomon({ id, species, owner, price, health }) {
         <DialogActions>
           <Button onClick={handleSell} color="primary">
             Sell
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        open={listOpen}
+        onClose={() => setSellOpen(false)}
+        aria-labelledby="form-dialog-title"
+      >
+        <DialogTitle id="form-dialog-title">
+          Select Target Cryptomon
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>Enter ID of target mon</DialogContentText>
+          <TextField
+            value={selectedMon}
+            onChange={e => setSelectedMon(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleListSubmit} color="primary">
+            Go
           </Button>
         </DialogActions>
       </Dialog>

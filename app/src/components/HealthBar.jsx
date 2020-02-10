@@ -18,7 +18,7 @@ function HealthBar({ health, maxHealth }) {
   const percent = (health / maxHealth) * 100;
 
   return (
-    <Tooltip title={`${health}/${maxHealth}`} arrow>
+    <Tooltip title={`Health: ${health}/${maxHealth}`} arrow>
       <ColorLinearProgress variant="determinate" value={percent} />
     </Tooltip>
   );

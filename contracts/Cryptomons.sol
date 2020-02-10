@@ -97,9 +97,8 @@ contract Cryptomons {
         Cryptomon memory second = cryptomons[secondId];
         require(first.species == second.species, "Both cryptomons must be of same species.");
         uint256 id = createNew(first.species);
-        Cryptomon memory cryptomon = cryptomons[id];
+        Cryptomon storage cryptomon = cryptomons[id];
         cryptomon.owner = msg.sender;
-
     }
 
     function fight(uint256 attackerId, uint256 defenderId) public {
