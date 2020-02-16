@@ -71,7 +71,7 @@ function Cryptomon({ id, species, owner, price, health }) {
   };
 
   const startFight = () => {
-    new Audio(`${process.env.PUBLIC_URL}/cries/${species}.ogg`).play();
+    new Audio(`${process.env.PUBLIC_URL}/sounds/${species}.ogg`).play();
     setAction('fight');
     setListOpen(true);
   };
