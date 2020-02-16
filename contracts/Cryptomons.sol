@@ -96,6 +96,8 @@ contract Cryptomons {
         Cryptomon memory first = cryptomons[firstId];
         Cryptomon memory second = cryptomons[secondId];
         require(first.species == second.species, "Both cryptomons must be of same species.");
+        require(first.health > 0, "First cryptomon has no health.");
+        require(second.health > 0, "Second cryptomon has no health.");
         uint256 id = createNew(first.species);
         Cryptomon storage cryptomon = cryptomons[id];
         cryptomon.owner = msg.sender;
@@ -114,9 +116,17 @@ contract Cryptomons {
         Species memory attackerSpecies = speciess[attacker.species];
         Species memory defenderSpecies = speciess[defender.species];
 
-        defender.health -= attackerSpecies.attack + defenderSpecies.defence;
+        defender.health = safeSub(defender.health, 10 * (attackerSpecies.attack / defenderSpecies.defence));
         if (defender.health > 0) {
-            attacker.health -= defenderSpecies.attack + attackerSpecies.defence;
+            attacker.health = safeSub(attacker.health, 10 * (defenderSpecies.attack / attackerSpecies.defence));
+        }
+    }
+
+    function safeSub(uint256 a, uint256 b) private pure returns (uint256 c) {
+        if (b >= a) {
+            return 0;
+        } else {
+            return a - b;
         }
     }
 }

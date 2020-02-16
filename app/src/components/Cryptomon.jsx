@@ -14,10 +14,14 @@ import {
   DialogTitle,
   List,
   ListItem,
-  TextField
+  TextField,
+  CardHeader,
+  Typography
 } from '@material-ui/core';
+
 import Card from '@material-ui/core/Card';
 import HealthBar from './HealthBar';
+import data from '../data';
 
 const useStyles = makeStyles({
   card: {
@@ -95,6 +99,7 @@ function Cryptomon({ id, species, owner, price, health }) {
           image={`${process.env.PUBLIC_URL}/images/${species}.png`}
         />
         <CardContent>
+          <Typography variant="h5">{data[species - 1].name}</Typography>
           <List>
             <ListItem key={0}>
               <TextField
@@ -106,7 +111,7 @@ function Cryptomon({ id, species, owner, price, health }) {
             </ListItem>
             <ListItem key={1}>
               <TextField
-                label="Price"
+                label={`${isOwner ? 'Sell' : 'Buy'} Price`}
                 value={`${web3Utils.fromWei(price, 'ether')} ETH`}
                 variant="outlined"
                 disabled
@@ -143,6 +148,7 @@ function Cryptomon({ id, species, owner, price, health }) {
             size="small"
             color="secondary"
             variant="contained"
+            disabled={!isOwner || !health}
             onClick={startBreed}
           >
             Breed
@@ -151,6 +157,7 @@ function Cryptomon({ id, species, owner, price, health }) {
             size="small"
             color="secondary"
             variant="contained"
+            disabled={!isOwner || !health}
             onClick={startFight}
           >
             Fight
@@ -178,7 +185,7 @@ function Cryptomon({ id, species, owner, price, health }) {
       </Dialog>
       <Dialog
         open={listOpen}
-        onClose={() => setSellOpen(false)}
+        onClose={() => setListOpen(false)}
         aria-labelledby="form-dialog-title"
       >
         <DialogTitle id="form-dialog-title">
