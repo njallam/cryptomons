@@ -55,7 +55,7 @@ contract Cryptomons {
 
     /// @dev Modifier to restrict calling to only the manager
     modifier onlyManager() {
-        require(msg.sender == manager, "Only manager can call this.");
+        require(msg.sender == manager, "Only manager can call this");
         _;
     }
 
@@ -68,7 +68,7 @@ contract Cryptomons {
     /// @param attack Attack value
     /// @param defence Defence value
     function addSpecies(uint256 id, Type type1, Type type2, uint256 maxHealth, uint256 attack, uint256 defence) public onlyManager {
-        require(id >= 1 && id <= 151, "Invalid species ID.");
+        require(id >= 1 && id <= 151, "Invalid species ID");
         speciess[id] = Species(type1, type2, maxHealth, attack, defence);
     }
 
@@ -76,7 +76,7 @@ contract Cryptomons {
     /// @param species ID of the species to be created
     /// @return ID of the new cryptomon
     function createNew(uint256 species) private returns (uint newId) {
-        require(species >= 1 && species <= 151, "Unknown species.");
+        require(species >= 1 && species <= 151, "Unknown species");
         uint256 id = total++;
         Cryptomon storage cryptomon = cryptomons[id];
         cryptomon.species = species;
@@ -97,11 +97,11 @@ contract Cryptomons {
     /// @notice Purchase a cryptomon which is for sale
     /// @param id ID of cryptomon to buy
     function buy(uint256 id) public payable {
-        require(id < total, "Cryptomon does not exist.");
+        require(id < total, "Cryptomon does not exist");
         Cryptomon storage cryptomon = cryptomons[id];
-        require(cryptomon.owner != msg.sender, "Cryptomon already owned.");
-        require(cryptomon.price > 0, "Cryptomon not for sale.");
-        require(msg.value >= cryptomon.price, "Message value too low.");
+        require(cryptomon.owner != msg.sender, "Cryptomon already owned");
+        require(cryptomon.price > 0, "Cryptomon not for sale");
+        require(msg.value >= cryptomon.price, "Message value too low");
 
         cryptomon.owner.transfer(cryptomon.price);
         cryptomon.owner = msg.sender;
@@ -112,9 +112,9 @@ contract Cryptomons {
     /// @param id ID of cryptomon to list for sale
     /// @param price Price to sell cryptomon ('0' if not for sale)
     function sell(uint256 id, uint256 price) public {
-        require(id < total, "Cryptomon does not exist.");
+        require(id < total, "Cryptomon does not exist");
         Cryptomon storage cryptomon = cryptomons[id];
-        require(cryptomon.owner == msg.sender, "Cryptomon not owned.");
+        require(cryptomon.owner == msg.sender, "Cryptomon not owned");
 
         cryptomon.price = price;
     }
@@ -123,16 +123,17 @@ contract Cryptomons {
     /// @param firstId ID of the first cryptomon
     /// @param secondId ID of the first cryptomon
     function breed(uint256 firstId, uint256 secondId) public payable {
-        require (firstId < total, "First cryptomon does not exist");
-        require (secondId < total, "Second cryptomon not exist");
-        require(msg.value >= 50 ether, "Message value too low.");
+        require(firstId < total, "First cryptomon does not exist");
+        require(secondId < total, "Second cryptomon not exist");
+        require(firstId != secondId, "Cryptomon cannot breed with itself");
+        require(msg.value >= 50 ether, "Message value too low");
         Cryptomon memory first = cryptomons[firstId];
         Cryptomon memory second = cryptomons[secondId];
-        require(first.species == second.species, "Both cryptomons must be of same species.");
-        require(first.owner == msg.sender, "You do not own the first cryptomon.");
-        require(second.owner == msg.sender, "You do not own the second cryptomon.");
-        require(first.health > 0, "First cryptomon has no health.");
-        require(second.health > 0, "Second cryptomon has no health.");
+        require(first.species == second.species, "Both cryptomons must be of same species");
+        require(first.owner == msg.sender, "You do not own the first cryptomon");
+        require(second.owner == msg.sender, "You do not own the second cryptomon");
+        require(first.health > 0, "First cryptomon has no health");
+        require(second.health > 0, "Second cryptomon has no health");
 
         uint256 id = createNew(first.species);
         Cryptomon storage cryptomon = cryptomons[id];
@@ -144,14 +145,14 @@ contract Cryptomons {
     /// @param attackerId ID of the attacking cryptomon (owned by the sender)
     /// @param defenderId ID of the defending cryptomon (not owned by the sender)
     function fight(uint256 attackerId, uint256 defenderId) public {
-        require (attackerId < total, "Attacker does not exist.");
-        require (defenderId < total, "Defender does not exist/");
+        require(attackerId < total, "Attacker does not exist");
+        require(defenderId < total, "Defender does not exist");
         Cryptomon storage attacker = cryptomons[attackerId];
         Cryptomon storage defender = cryptomons[defenderId];
-        require(attacker.owner == msg.sender, "You do not own the attacking cryptomon.");
-        require(attacker.health > 0, "Attacker has no health.");
-        require(defender.owner != msg.sender, "You own the defending cryptomon.");
-        require(defender.health > 0, "Defender has no health.");
+        require(attacker.owner == msg.sender, "You do not own the attacking cryptomon");
+        require(attacker.health > 0, "Attacker has no health");
+        require(defender.owner != msg.sender, "You own the defending cryptomon");
+        require(defender.health > 0, "Defender has no health");
 
         Species memory attackerSpecies = speciess[attacker.species];
         Species memory defenderSpecies = speciess[defender.species];
