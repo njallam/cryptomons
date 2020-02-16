@@ -109,7 +109,6 @@ contract Cryptomons {
     }
 
     /// @notice List a cryptomon for sale
-    /// @dev
     /// @param id ID of cryptomon to list for sale
     /// @param price Price to sell cryptomon ('0' if not for sale)
     function sell(uint256 id, uint256 price) public {
