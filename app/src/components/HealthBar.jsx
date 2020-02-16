@@ -14,11 +14,14 @@ const ColorLinearProgress = withStyles({
   }
 })(LinearProgress);
 
-function HealthBar({ health, maxHealth }) {
+function HealthBar({ health, maxHealth, attack, defence }) {
   const percent = (health / maxHealth) * 100;
 
   return (
-    <Tooltip title={`Health: ${health}/${maxHealth}`} arrow>
+    <Tooltip
+      title={`Health: ${health}/${maxHealth}; Attack: ${attack}; Defence: ${defence}`}
+      arrow
+    >
       <ColorLinearProgress variant="determinate" value={percent} />
     </Tooltip>
   );
@@ -26,7 +29,9 @@ function HealthBar({ health, maxHealth }) {
 
 HealthBar.propTypes = {
   health: PropTypes.number.isRequired,
-  maxHealth: PropTypes.number.isRequired
+  maxHealth: PropTypes.number.isRequired,
+  attack: PropTypes.number.isRequired,
+  defence: PropTypes.number.isRequired
 };
 
 export default HealthBar;

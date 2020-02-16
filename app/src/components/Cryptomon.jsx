@@ -15,7 +15,7 @@ import {
   List,
   ListItem,
   TextField,
-  CardHeader,
+  Tooltip,
   Typography
 } from '@material-ui/core';
 
@@ -47,6 +47,7 @@ function Cryptomon({ id, species, owner, price, health }) {
 
   const isOwner = owner === drizzleState.accounts[0];
   const isForSale = price !== '0';
+  const { name, description } = data[species - 1];
 
   const { maxHealth, attack, defence } =
     useCacheCall('Cryptomons', 'speciess', species) || {};
@@ -70,8 +71,14 @@ function Cryptomon({ id, species, owner, price, health }) {
     setListOpen(true);
   };
 
+  const playSound = () => {
+    const sound = new Audio(`${process.env.PUBLIC_URL}/sounds/${species}.ogg`);
+    sound.volume = 0.1;
+    sound.play();
+  };
+
   const startFight = () => {
-    new Audio(`${process.env.PUBLIC_URL}/sounds/${species}.ogg`).play();
+    playSound();
     setAction('fight');
     setListOpen(true);
   };
@@ -93,13 +100,23 @@ function Cryptomon({ id, species, owner, price, health }) {
   return (
     <>
       <Card className={classes.card} variant="outlined">
-        <HealthBar health={health} maxHealth={Number(maxHealth)} />
-        <CardMedia
-          className={classes.media}
-          image={`${process.env.PUBLIC_URL}/images/${species}.png`}
+        <HealthBar
+          health={health}
+          maxHealth={Number(maxHealth)}
+          attack={Number(attack)}
+          defence={Number(defence)}
         />
+        <Tooltip title={description}>
+          <CardMedia
+            className={classes.media}
+            image={`${process.env.PUBLIC_URL}/images/${species}.png`}
+          />
+        </Tooltip>
+
         <CardContent>
-          <Typography variant="h5">{data[species - 1].name}</Typography>
+          <Typography variant="h5">
+            #{id} [{name}]
+          </Typography>
           <List>
             <ListItem key={0}>
               <TextField

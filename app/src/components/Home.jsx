@@ -24,6 +24,9 @@ export default () => {
   const { drizzle, useCacheCall } = useDrizzle();
   const drizzleState = useDrizzleState(state => state);
   const total = useCacheCall('Cryptomons', 'total');
+  const manager = useCacheCall('Cryptomons', 'manager');
+
+  const isManager = drizzleState.accounts[0] === manager;
 
   const web3Utils = drizzle.web3.utils;
 
@@ -80,8 +83,7 @@ export default () => {
             </Grid>
           </ExpansionPanelDetails>
         </ExpansionPanel>
-
-        <ExpansionPanel>
+        <ExpansionPanel disabled={!isManager}>
           <ExpansionPanelSummary>
             <Typography variant="h5">Create Cryptomon (Manager)</Typography>
           </ExpansionPanelSummary>
@@ -93,8 +95,8 @@ export default () => {
               method="create"
               render={MaterialForm}
             />
-            <Typography display="block" variant="caption">
-              1 ETH = {web3Utils.toWei('1', 'ether')}
+            <Typography variant="caption">
+              1 ETH = {web3Utils.toWei('1', 'ether')} wei
             </Typography>
           </ExpansionPanelDetails>
         </ExpansionPanel>
