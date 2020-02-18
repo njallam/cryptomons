@@ -103,8 +103,10 @@ contract Cryptomons {
         require(cryptomon.price > 0, "Cryptomon not for sale");
         require(msg.value >= cryptomon.price, "Message value too low");
 
-        cryptomon.owner.transfer(cryptomon.price);
+        address payable oldOwner = cryptomon.owner;
+        // Change owner here to prevent reentancy
         cryptomon.owner = msg.sender;
+        oldOwner.transfer(msg.value);
         cryptomon.price = 0;
     }
 
@@ -139,6 +141,8 @@ contract Cryptomons {
         Cryptomon storage cryptomon = cryptomons[id];
         cryptomon.owner = msg.sender;
         cryptomon.price = 0;
+
+        manager.transfer(msg.value);
     }
 
     /// @notice Attack, using a cryptomon owned by the sender, a defending cryptomon owned by another player
